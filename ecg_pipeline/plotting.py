@@ -38,13 +38,11 @@ def plot_ecg_with_annotations(
 ) -> Path | None:
     """Plot the ECG signal and overlay annotated segments."""
 
-    if total_points is not None:
-        total_points = min(total_points, signal.shape[0])
-    else:
-        total_points = signal.shape[0]
+    # Resolve total number of points as an int to satisfy type checkers
+    n_points = min(total_points, signal.shape[0]) if total_points is not None else signal.shape[0]
 
-    times = np.arange(total_points, dtype=np.float32) / float(sample_rate)
-    values = signal[:total_points]
+    times = np.arange(n_points, dtype=np.float32) / float(sample_rate)
+    values = signal[:n_points]
 
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.plot(times, values, color="black", linewidth=1.0, label="ECG start")
@@ -52,17 +50,17 @@ def plot_ecg_with_annotations(
     # ...existing code...
     for label, segments in annotations.items():
         color = COLOR_MAP.get(label, None)
-        for start, end in _segment_slices(segments, total_points):
+        for start, end in _segment_slices(segments, n_points):
             if start is None or end is None:
                 continue  # Skip invalid segments
             start_time = times[start]
-            end_index = min(end - 1, total_points - 1)
+            end_index = min(end - 1, n_points - 1)
             end_time = times[end_index]
             if end_time <= start_time:
                 end_time = start_time + (1.0 / float(sample_rate))
             ax.axvspan(start_time, end_time, color=color, alpha=0.25, label=label)
     # ...existing code...
-
+    
     handles, labels = ax.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
     ax.legend(by_label.values(), by_label.keys())
