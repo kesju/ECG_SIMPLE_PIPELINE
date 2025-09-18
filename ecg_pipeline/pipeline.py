@@ -75,7 +75,7 @@ class ECGDenoisingPipeline:
 
         # Remove gaps
         ecg_start, kept_after_gaps = remove_segments(ecg_orig, gaps_segments)
-        self.index_map.add_mapping("ecg_start", "ecg_orig", kept_after_gaps)
+        self.index_map.add_mapping("ecg_start", "ecg_orig", list(map(int, kept_after_gaps)))
 
         # Detect & remove outliers
         cfg = self.config
@@ -87,7 +87,7 @@ class ECGDenoisingPipeline:
         self.index_map.record_segments("outliers", "ecg_start", outlier_segments)
 
         ecg_no_outliers, kept_after_outliers = remove_segments(ecg_start, outlier_segments)
-        self.index_map.add_mapping("ecg_no_outliers", "ecg_start", kept_after_outliers)
+        self.index_map.add_mapping("ecg_no_outliers", "ecg_start", list(map(int, kept_after_outliers)))
 
         # Detect & remove R-dropouts
         rdropout_segments = detect_r_dropouts(
@@ -99,7 +99,7 @@ class ECGDenoisingPipeline:
         self.index_map.record_segments("rdropouts", "ecg_no_outliers", rdropout_segments)
 
         ecg_final, kept_after_rdropouts = remove_segments(ecg_no_outliers, rdropout_segments)
-        self.index_map.add_mapping("ecg_final", "ecg_no_outliers", kept_after_rdropouts)
+        self.index_map.add_mapping("ecg_final", "ecg_no_outliers", list(map(int, kept_after_rdropouts)))
 
         # Memory optimization: ecg_no_outliers no longer needed.
         del ecg_no_outliers

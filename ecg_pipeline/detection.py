@@ -30,7 +30,7 @@ def detect_outliers(
     amplitude = np.abs(signal)
     mask = amplitude >= amplitude_threshold
     raw_segments = ((s, e) for s, e in _iter_groups(mask) if (e - s) >= min_segment_length)
-    return _merge_segments(raw_segments)
+    return _merge_segments(segments=raw_segments)
 
 
 def detect_r_dropouts(
@@ -65,5 +65,5 @@ def detect_r_dropouts(
 
     mask = std_full <= std_threshold
     raw_segments = ((s, e) for s, e in _iter_groups(mask) if (e - s) >= min_segment_length)
-    return _merge_segments(raw_segments)
+    return _merge_segments(segments=raw_segments)
 
