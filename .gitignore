@@ -1,0 +1,24 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+# Jupyter
+.ipynb_checkpoints/
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/          # keep if you have team-wide settings; otherwise ignore
+.idea/
+# Env & secrets
+.env
+*.env
+.env.*.local
+# Data (optional – keep big raw files out of git)
+data/
+logs/
+*.npy
+*.h5

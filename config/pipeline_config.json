@@ -1,0 +1,15 @@
+{
+  "outlier_detection": {
+    "amplitude_threshold": 1.1,
+    "min_segment_length": 5
+  },
+  "rdropout_detection": {
+    "std_threshold": 0.015,
+    "window_size": 36,
+    "min_segment_length": 12
+  },
+  "plotting": {
+    "sample_rate": 360,
+    "total_points": 2000
+  }
+}
