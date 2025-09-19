@@ -17,6 +17,28 @@ COLOR_MAP = {
 
 
 def _segment_slices(segments: Iterable[Segment], total_points: int | None) -> Iterable[Tuple[int, int]]:
+    """
+    Yield valid half-open slice ranges from segments, optionally clipped to an upper bound.
+
+    Iterates over (start, end) index pairs and yields (start, stop) tuples suitable
+    for Python slicing semantics [start:stop). If total_points is provided,
+    segments that start at or beyond total_points are skipped, and each stop is
+    clipped to min(end, total_points). Segments with non-positive length
+    (stop <= start) are discarded. Order is preserved; segments are neither sorted
+    nor merged.
+
+    Args:
+        segments: Iterable of (start, end) index pairs (integers).
+        total_points: Optional maximum valid index. When provided, stop will not
+            exceed this value. If None, no upper bound is applied.
+
+    Yields:
+        Tuple[int, int]: Start (inclusive) and stop (exclusive) indices with start < stop.
+
+    Notes:
+        - Negative start values are not clamped to zero.
+        - No bounds checking is performed beyond the optional total_points limit.
+    """
     for start, end in segments:
         if total_points is not None and start >= total_points:
             continue

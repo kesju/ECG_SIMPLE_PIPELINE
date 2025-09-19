@@ -71,11 +71,14 @@ class ECGDenoisingPipeline:
         """Execute the denoising pipeline given pre-loaded data."""
 
         gaps_segments = list(gaps_segments)
+        print("gaps_segments:", gaps_segments)
         self.index_map.record_segments("gaps", "ecg_orig", gaps_segments)
+        print("Recorded gaps:", self.index_map.get_segments("gaps"))
 
         # Remove gaps
         ecg_start, kept_after_gaps = remove_segments(ecg_orig, gaps_segments)
         self.index_map.add_mapping("ecg_start", "ecg_orig", list(map(int, kept_after_gaps)))
+        print("Kept after gaps:", kept_after_gaps, len(kept_after_gaps), "of", len(ecg_orig))
 
         # Detect & remove outliers
         cfg = self.config
@@ -84,6 +87,7 @@ class ECGDenoisingPipeline:
             amplitude_threshold=cfg.outlier_detection.amplitude_threshold,
             min_segment_length=cfg.outlier_detection.min_segment_length,
         )
+        print("outlier_segments:", outlier_segments)
         self.index_map.record_segments("outliers", "ecg_start", outlier_segments)
 
         ecg_no_outliers, kept_after_outliers = remove_segments(ecg_start, outlier_segments)
